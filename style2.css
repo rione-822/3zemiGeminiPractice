@@ -14,23 +14,10 @@ body {
     padding-top: 100px;
 }
 
-#start-button, #retry-button, #back-to-home-button {
+#start-button, #retry-button {
     font-size: 1.2em;
     padding: 10px 20px;
     cursor: pointer;
-}
-
-#difficulty-selector {
-    margin-top: 20px;
-}
-
-#difficulty-selector label {
-    margin: 0 10px;
-    cursor: pointer;
-}
-
-#back-to-home-button {
-    margin-top: 10px;
 }
 
 #game-header {
@@ -82,11 +69,11 @@ body {
 }
 
 #real-download-btn {
-    background-color: #007bff; /* 青 */
+    background-color: #28a745; /* 青 */
 }
 
 #real-download-btn:hover {
-    background-color: #0069d9;
+    background-color: #218838;
 }
 
 #ad-container {
@@ -106,12 +93,12 @@ body {
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     pointer-events: auto; /* 広告自体はクリック可能に */
     z-index: 100;
-    text-align: center;
 }
 
 .ad .close-btn {
     position: absolute;
     top: 0;
+    right: 0;
     width: 20px;
     height: 20px;
     background-color: red;
@@ -121,18 +108,6 @@ body {
     cursor: pointer;
 }
 
-.ad .close-btn.right { right: 0; }
-.ad .close-btn.left { left: 0; }
-
-.ad .close-btn.fake {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.double-close-ad {
-    border: 2px solid #555;
-}
-
 .fade-in {
     animation: fadeIn 1.5s forwards;
 }
@@ -140,23 +115,4 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-
-.virus-popup {
-    border: 3px solid red;
-    background-color: #fff0f0;
-}
-
-.virus-popup h4 {
-    color: red;
-    margin: 5px 0;
-    font-size: 1.2em;
-}
-
-#result-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    display: inline-block;
 }
