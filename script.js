@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultTitle = document.getElementById('result-title');
     const resultScore = document.getElementById('result-score');
     const resultTime = document.getElementById('result-time');
+    const resultRank = document.getElementById('result-rank');
+    const resultMessage = document.getElementById('result-message');
 
     // --- ゲーム変数 ---
     let score = 0;
@@ -125,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreDisplay.textContent = `スコア: ${score}`;
         timerDisplay.textContent = `制限時間: ${timeLeft}`;
         adContainer.innerHTML = '';
+        resultMessage.classList.remove('fade-in-message'); // アニメーションクラスを削除
 
         // タイマー開始
         timer = setInterval(() => {
@@ -156,6 +159,48 @@ document.addEventListener('DOMContentLoaded', () => {
             playSound('gameOver');
         }
         resultScore.textContent = `スコア: ${score}`;
+
+        // ランク判定
+        let rank = '';
+        let message = '';
+
+        if (isClear) {
+            const scoreThresholds = {
+                easy: { S: 1500, A: 1200, B: 900, C: 600, D: 0 },
+                normal: { S: 3000, A: 2400, B: 1800, C: 1200, D: 0 },
+                hard: { SS: 4400, S: 4300, A: 3300, B: 2300, C: 1300, D: 0 }
+            };
+
+            const thresholds = scoreThresholds[currentDifficulty];
+
+            if (currentDifficulty === 'hard' && score >= thresholds.SS) {
+                rank = 'SS';
+                message = '神業！もはや広告の神ですね！';
+            } else if (score >= thresholds.S) {
+                rank = 'S';
+                message = '素晴らしい！あなたは広告消しの達人です！';
+            } else if (score >= thresholds.A) {
+                rank = 'A';
+                message = 'お見事！かなりの実力者ですね！';
+            } else if (score >= thresholds.B) {
+                rank = 'B';
+                message = '良い調子！次も期待しています！';
+            } else if (score >= thresholds.C) {
+                rank = 'C';
+                message = 'まずまずですね。もう少し頑張りましょう！';
+            } else {
+                rank = 'D';
+                message = 'まだまだ伸びしろがありますね！';
+            }
+            resultRank.textContent = `ランク: ${rank}`;
+            resultMessage.textContent = message;
+            resultMessage.classList.add('fade-in-message'); // アニメーションクラスを追加
+        } else {
+            // ゲームオーバー時
+            resultRank.textContent = ''; // ランクは非表示
+            resultMessage.textContent = '残念！次はクリアを目指しましょう！'; // メッセージは表示
+            resultMessage.classList.add('fade-in-message'); // アニメーションクラスを追加
+        }
     }
 
     // --- 模擬サイトのセットアップ ---

@@ -34,6 +34,11 @@ body {
 }
 
 #game-header {
+    position: sticky;
+    top: 0;
+    background-color: #f0f0f0;
+    z-index: 1000;
+    padding: 10px 0;
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -159,4 +164,26 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     display: inline-block;
+}
+
+#result-rank {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #ff6347; /* トマト色 */
+    margin: 10px 0;
+}
+
+#result-message {
+    font-size: 1.2em;
+    color: #333;
+    opacity: 0; /* 初期状態は透明 */
+}
+
+.fade-in-message {
+    animation: fadeInMessage 0.75s ease-in 0.5s forwards; /* 0.5秒遅れて開始 */
+}
+
+@keyframes fadeInMessage {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
