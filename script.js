@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             adTypes: ['normal', 'fadeIn', 'popup', 'doubleClose'],
             fakeButtonCount: 5,
             fakeButtonColors: ['#007bff', '#007bff', '#007bff', '#007bff', '#007bff'],
-            fakeButtonTexts: ['DOWNLOAD', 'Get Now', '無料セットアップ', '今すぐインストール', 'Download v3.0 Final'],
+            fakeButtonTexts: ['DOWNLOAD', 'Get Now', '無料セットアップ', '今すぐダウンロード', 'Download v3.0 Final'],
             website: {
                 title: '【業界最先端】セキュリティソフト「Guardian Pro」',
                 description: '「Guardian Pro」は、ウイルス、マルウェア、ランサムウェアからあなたのPCを鉄壁防御。世界最高水準の検出率で、オンラインの脅威を未然に防ぎます。',
@@ -87,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clear: 'sounds/clear.mp3',
         gameOver: 'sounds/gameover.mp3',
         buttonClick: 'sounds/button_click.mp3',
+        backToHome: 'sounds/back_to_home_button.mp3',
+        difficultySelect: 'sounds/difficulty_select.mp3',
+        ssSuccess: 'sounds/ss_success.mp3',
         virus: 'sounds/virus.mp3'
     };
 
@@ -108,9 +111,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     backToHomeButton.addEventListener('click', () => {
-        playSound('buttonClick');
+        playSound('backToHome');
         resultScreen.classList.add('hidden');
         homeScreen.classList.remove('hidden');
+    });
+
+    const difficultyRadios = document.querySelectorAll('input[name="difficulty"]');
+    difficultyRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            playSound('difficultySelect');
+        });
     });
 
     // --- ゲームのメイン処理 ---
@@ -152,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
             score += timeBonus;
             resultTitle.textContent = 'ゲームクリア！';
             resultTime.textContent = `クリアタイム: ${initialTime - timeLeft}秒 (時間ボーナス: ${timeBonus}点)`;
-            playSound('clear');
         } else {
             resultTitle.textContent = 'GAME OVER';
             resultTime.textContent = '';
@@ -165,40 +174,54 @@ document.addEventListener('DOMContentLoaded', () => {
         let message = '';
 
         if (isClear) {
-            const scoreThresholds = {
-                easy: { S: 1500, A: 1200, B: 900, C: 600, D: 0 },
-                normal: { S: 3000, A: 2400, B: 1800, C: 1200, D: 0 },
-                hard: { SS: 4400, S: 4300, A: 3300, B: 2300, C: 1300, D: 0 }
-            };
-
-            const thresholds = scoreThresholds[currentDifficulty];
-
-            if (currentDifficulty === 'hard' && score >= thresholds.SS) {
-                rank = 'SS';
-                message = '神業！もはや広告の神ですね！';
-            } else if (score >= thresholds.S) {
-                rank = 'S';
-                message = '素晴らしい！あなたは広告消しの達人です！';
-            } else if (score >= thresholds.A) {
-                rank = 'A';
-                message = 'お見事！かなりの実力者ですね！';
-            } else if (score >= thresholds.B) {
-                rank = 'B';
-                message = '良い調子！次も期待しています！';
-            } else if (score >= thresholds.C) {
-                rank = 'C';
-                message = 'まずまずですね。もう少し頑張りましょう！';
+            // スコアが0の場合の特別なメッセージ
+            if ((score - timeLeft * 30) === 0) { // タイムボーナスを最終スコアから引いている
+                rank = 'D'; // スコア0なのでDランクとする
+                message = 'あなたは素晴らしい寛容さをもって広告を見逃した\nあなたの目に憎しみはない';
+                playSound('clear'); // 通常クリアの音を再生
             } else {
-                rank = 'D';
-                message = 'まだまだ伸びしろがありますね！';
+                // 既存のランク判定ロジック
+                const scoreThresholds = {
+                    easy: { S: 1500, A: 1200, B: 900, C: 600, D: 0 },
+                    normal: { S: 3000, A: 2400, B: 1800, C: 1200, D: 0 },
+                    hard: { SS: 4600, S: 4300, A: 3300, B: 2300, C: 1300, D: 0 }
+                };
+
+                const thresholds = scoreThresholds[currentDifficulty];
+
+                if (currentDifficulty === 'hard' && score >= thresholds.SS) {
+                    rank = 'SS';
+                    message = 'あなたは愛を持って広告をせん滅した\nあなたはプロの広告スナイパーだ';
+                    playSound('ssSuccess'); // SSランクの音を再生
+                } else if (score >= thresholds.S) {
+                    rank = 'S';
+                    message = 'あなたの華麗な指は広告の天敵になった';
+                    playSound('clear'); // 通常クリアの音を再生
+                } else if (score >= thresholds.A) {
+                    rank = 'A';
+                    message = '広告はあなたのカーソルさばきにおびえている';
+                    playSound('clear'); // 通常クリアの音を再生
+                } else if (score >= thresholds.B) {
+                    rank = 'B';
+                    message = 'あなたは広告消しの才能にめざめた';
+                    playSound('clear'); // 通常クリアの音を再生
+                } else if (score >= thresholds.C) {
+                    rank = 'C';
+                    message = 'あなたはより高みをめざすことができる';
+                    playSound('clear'); // 通常クリアの音を再生
+                } else {
+                    rank = 'D';
+                    message = '広告とのたたかいはまだ始まったばかりだ';
+                    playSound('clear'); // 通常クリアの音を再生
+                }
             }
             resultRank.textContent = `ランク: ${rank}`;
-            resultMessage.textContent = message;
+            resultMessage.innerHTML = message.replace(/\n/g, '<br>');
             resultMessage.classList.add('fade-in-message'); // アニメーションクラスを追加
         } else {
             // ゲームオーバー時
             resultRank.textContent = ''; // ランクは非表示
-            resultMessage.textContent = '残念！次はクリアを目指しましょう！'; // メッセージは表示
+            resultMessage.innerHTML = 'あなたは広告の海におぼれた<br>あなたの中に広告への闘志がめばえた'; // メッセージは表示
             resultMessage.classList.add('fade-in-message'); // アニメーションクラスを追加
         }
     }
@@ -229,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ダウンロード案内文を追加
         const leadText = document.createElement('p');
-        leadText.textContent = '以下のボタンの中から本物を探してダウンロードしてください。';
+        leadText.textContent = '以下のボタンからダウンロードしてください。';
         mockContentArea.appendChild(leadText);
 
         // ボタンとテキストブロックを交互に配置
