@@ -27,8 +27,7 @@ article {
     border-radius: 5px;
 }
 
-#ad-container,
-#ad-container-2 {
+#ad-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -39,22 +38,9 @@ article {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.5s, visibility 0.5s;
 }
 
-#ad-container.hidden,
-#ad-container-2.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
-#ad-container-2 {
-    z-index: 1001;
-}
-
-.ad-content {
+#ad-content {
     background-color: #fff;
     padding: 2rem;
     border-radius: 10px;
