@@ -3,43 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>架空ニュース</title>
+    <title>広告ブレイク！</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>架空ニュース</h1>
-    </header>
-    <main>
-        <article>
-            <h2>画期的な新技術、ついに発表</h2>
-            <p>世界中の科学者が注目していた新技術が、本日未明、ついに発表されました。この技術は、エネルギー問題の解決に大きく貢献すると期待されています。</p>
-        </article>
-        <article>
-            <h2>週末の天気予報</h2>
-            <p>気象庁によると、今週末は全国的に晴天に恵まれる見込みです。お出かけには最適な週末となりそうです。</p>
-        </article>
-        <article>
-            <h2>話題の映画、週末興行収入ランキング1位に</h2>
-            <p>先週公開されたばかりの映画「ジェミニの冒険」が、週末の興行収入ランキングで堂々の1位を獲得しました。観客からは絶賛の声が相次いでいます。</p>
-        </article>
-    </main>
-
-    <div id="ad-container">
-        <div class="ad-content">
-            <span id="close-ad">&times;</span>
-            <h2>【特別セール】今だけ限定！</h2>
-            <p>この素晴らしい商品が、今なら50%オフ！お見逃しなく！</p>
-            <a href="#" class="ad-button">今すぐ購入</a>
+    <div id="home-screen">
+        <h1>広告ブレイク！</h1>
+        <p>ウェブ広告の煩わしさから解放されよう！<br>ひたすら広告を消して、最高のスコアを目指せ！</p>
+        <button id="start-button">広告消しを始める</button>
+        <div id="difficulty-selector">
+            <label><input type="radio" name="difficulty" value="easy" checked> かんたん</label>
+            <label><input type="radio" name="difficulty" value="normal"> ふつう</label>
+            <label><input type="radio" name="difficulty" value="hard"> むずかしい</label>
         </div>
     </div>
 
-    <div id="ad-container-2">
-        <div class="ad-content">
-            <span id="close-ad-2">&times;</span>
-            <h2>【緊急告知】サイト閉鎖のお知らせ</h2>
-            <p>長らくご愛顧いただきましたが、当サイトはまもなく閉鎖いたします。詳細は下記をご覧ください。</p>
-            <a href="#" class="ad-button">詳細はこちら</a>
+    <div id="game-screen" class="hidden">
+        <div id="game-header">
+            <div id="timer">制限時間: 60</div>
+            <div id="score">スコア: 0</div>
+        </div>
+        
+        <div id="game-container">
+            <!-- この中に模擬サイトと広告が表示される -->
+            <div id="mock-website">
+                <h2 id="mock-title"></h2>
+                <p id="mock-description"></p>
+                <div id="mock-content-area"></div>
+            </div>
+            <div id="ad-container"></div>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <div id="result-content">
+            <h2 id="result-title"></h2>
+            <p id="result-rank"></p>
+            <p id="result-score"></p>
+            <p id="result-time"></p>
+            <p id="result-message"></p>
+            <button id="retry-button">もう一度遊ぶ</button>
+            <button id="back-to-home-button">ホーム画面へ戻る</button>
         </div>
     </div>
 
