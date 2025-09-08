@@ -9,6 +9,7 @@
 <body>
     <div id="home-screen">
         <button id="help-button">？</button>
+        <button id="trophy-button">🏆</button>
         <div class="home-content">
             <h1>広告ブレイク！</h1>
             <p>ウェブ広告の煩わしさから解放されよう！<br>ひたすら広告を消して、最高のスコアを目指せ！</p>
@@ -134,6 +135,19 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="trophy-notification-container"></div>
+
+    <div id="trophy-modal" class="hidden">
+        <div id="trophy-overlay"></div>
+        <div id="trophy-content">
+            <button id="close-trophy-button">&times;</button>
+            <h2>トロフィー</h2>
+            <div id="trophy-list">
+                <!-- トロフィーがここに動的に追加される -->
             </div>
         </div>
     </div>
