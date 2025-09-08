@@ -3,11 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeScreen = document.getElementById('home-screen');
     const gameScreen = document.getElementById('game-screen');
     const resultScreen = document.getElementById('result-screen');
-
     const startButton = document.getElementById('start-button');
     const retryButton = document.getElementById('retry-button');
     const backToHomeButton = document.getElementById('back-to-home-button');
-
     const timerDisplay = document.getElementById('timer');
     const scoreDisplay = document.getElementById('score');
     const adContainer = document.getElementById('ad-container');
@@ -15,12 +13,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const mockTitle = document.getElementById('mock-title');
     const mockDescription = document.getElementById('mock-description');
     const mockContentArea = document.getElementById('mock-content-area');
-
     const resultTitle = document.getElementById('result-title');
     const resultScore = document.getElementById('result-score');
     const resultTime = document.getElementById('result-time');
     const resultRank = document.getElementById('result-rank');
     const resultMessage = document.getElementById('result-message');
+    const difficultyRadios = document.querySelectorAll('input[name="difficulty"]');
+    // ヘルプ機能のDOM要素
+    const helpButton = document.getElementById('help-button');
+    const helpModal = document.getElementById('help-modal');
+    const closeHelpButton = document.getElementById('close-help-button');
+    const helpOverlay = document.getElementById('help-overlay');
+    const helpItemTitles = document.querySelectorAll('.help-item-title');
+
+    // --- 最高記録関連のDOM要素 ---
+    const easyBestScore = document.getElementById('easy-best-score');
+    const easyBestRank = document.getElementById('easy-best-rank');
+    const normalBestScore = document.getElementById('normal-best-score');
+    const normalBestRank = document.getElementById('normal-best-rank');
+    const hardBestScore = document.getElementById('hard-best-score');
+    const hardBestRank = document.getElementById('hard-best-rank');
+
+
+    // --- LocalStorage関連 ---
+    const storageKey = 'adBreakerGameData';
+    let gameData;
+
+    const defaultGameData = {
+        bestScores: {
+            easy: { score: 0, rank: '-' },
+            normal: { score: 0, rank: '-' },
+            hard: { score: 0, rank: '-' }
+        },
+        trophies: {} // 将来のトロフィー機能用
+    };
+
+    // ランクの序列 (SSが最も高い)
+    const rankOrder = { 'SS': 5, 'S': 4, 'A': 3, 'B': 2, 'C': 1, 'D': 0, '-': -1 };
 
     // --- ゲーム変数 ---
     let score = 0;
@@ -90,41 +119,70 @@ document.addEventListener('DOMContentLoaded', () => {
         backToHome: 'sounds/back_to_home_button.mp3',
         difficultySelect: 'sounds/difficulty_select.mp3',
         ssSuccess: 'sounds/ss_success.mp3',
-        virus: 'sounds/virus.mp3'
+        virus: 'sounds/virus.mp3',
+        helpOpen: 'sounds/help_button.mp3',
+        helpClose: 'sounds/help_close_button.mp3'
     };
 
+    // --- 関数定義 ---
     function playSound(soundName) {
         const audio = new Audio(soundPaths[soundName]);
         audio.play();
     }
 
-    // --- イベントリスナー ---
-    startButton.addEventListener('click', () => {
-        playSound('buttonClick');
-        currentDifficulty = document.querySelector('input[name="difficulty"]:checked').value;
-        startGame(currentDifficulty);
-    });
+    // --- データ管理関数 ---
+    function loadGameData() {
+        const data = localStorage.getItem(storageKey);
+        gameData = data ? JSON.parse(data) : defaultGameData;
+        // データ構造が古い場合に備えて、デフォルトとマージする
+        if (!gameData.bestScores) {
+            gameData.bestScores = defaultGameData.bestScores;
+        }
+        if (!gameData.trophies) {
+            gameData.trophies = defaultGameData.trophies;
+        }
+        displayBestScores();
+    }
 
-    retryButton.addEventListener('click', () => {
-        playSound('buttonClick');
-        startGame(currentDifficulty); // 前回と同じ難易度で再挑戦
-    });
+    function saveGameData() {
+        localStorage.setItem(storageKey, JSON.stringify(gameData));
+    }
 
-    backToHomeButton.addEventListener('click', () => {
-        playSound('backToHome');
-        resultScreen.classList.add('hidden');
-        homeScreen.classList.remove('hidden');
-    });
+    function displayBestScores() {
+        const scores = gameData.bestScores;
+        easyBestScore.textContent = scores.easy.score > 0 ? scores.easy.score : '記録なし';
+        easyBestRank.textContent = scores.easy.rank;
+        normalBestScore.textContent = scores.normal.score > 0 ? scores.normal.score : '記録なし';
+        normalBestRank.textContent = scores.normal.rank;
+        hardBestScore.textContent = scores.hard.score > 0 ? scores.hard.score : '記録なし';
+        hardBestRank.textContent = scores.hard.rank;
+    }
 
-    const difficultyRadios = document.querySelectorAll('input[name="difficulty"]');
-    difficultyRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            playSound('difficultySelect');
-        });
-    });
+    function updateBestScore(difficulty, newScore, newRank) {
+        const currentBest = gameData.bestScores[difficulty];
+        let updated = false;
+
+        // スコアを更新
+        if (newScore > currentBest.score) {
+            currentBest.score = newScore;
+            updated = true;
+        }
+
+        // ランクを更新 (rankOrderに基づいて比較)
+        if (rankOrder[newRank] > rankOrder[currentBest.rank]) {
+            currentBest.rank = newRank;
+            updated = true;
+        }
+
+        if (updated) {
+            saveGameData();
+            displayBestScores(); // ホーム画面の表示も更新
+        }
+    }
+
 
     // --- ゲームのメイン処理 ---
-    function startGame(difficulty) {
+        function startGame(difficulty) {
         homeScreen.classList.add('hidden');
         resultScreen.classList.add('hidden');
         gameScreen.classList.remove('hidden');
@@ -200,24 +258,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (score >= thresholds.A) {
                     rank = 'A';
                     message = '広告はあなたのカーソルさばきにおびえている';
-                    playSound('clear'); // 通常クリアの音を再生
+                    playSound('clear');
                 } else if (score >= thresholds.B) {
                     rank = 'B';
                     message = 'あなたは広告消しの才能にめざめた';
-                    playSound('clear'); // 通常クリアの音を再生
+                    playSound('clear');
                 } else if (score >= thresholds.C) {
                     rank = 'C';
                     message = 'あなたはより高みをめざすことができる';
-                    playSound('clear'); // 通常クリアの音を再生
+                    playSound('clear');
                 } else {
                     rank = 'D';
                     message = '広告とのたたかいはまだ始まったばかりだ';
-                    playSound('clear'); // 通常クリアの音を再生
+                    playSound('clear');
                 }
             }
             resultRank.textContent = `ランク: ${rank}`;
             resultMessage.innerHTML = message.replace(/\n/g, '<br>');
             resultMessage.classList.add('fade-in-message'); // アニメーションクラスを追加
+
+            // 最高記録を更新
+            updateBestScore(currentDifficulty, score, rank);
+
         } else {
             // ゲームオーバー時
             resultRank.textContent = ''; // ランクは非表示
@@ -231,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // サイト情報の更新
         mockTitle.textContent = settings.website.title;
         mockDescription.textContent = settings.website.description;
-        mockContentArea.innerHTML = ''; // コンテンツエリアをクリア
+        mockContentArea.innerHTML = '';
 
         // ボタンを生成
         const buttons = [];
@@ -430,5 +492,56 @@ document.addEventListener('DOMContentLoaded', () => {
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
-});
 
+    // --- イベントリスナー登録 ---
+    startButton.addEventListener('click', () => {
+        playSound('buttonClick');
+        currentDifficulty = document.querySelector('input[name="difficulty"]:checked').value;
+        startGame(currentDifficulty);
+    });
+
+    retryButton.addEventListener('click', () => {
+        playSound('buttonClick');
+        startGame(currentDifficulty);
+    });
+
+    backToHomeButton.addEventListener('click', () => {
+        playSound('backToHome');
+        resultScreen.classList.add('hidden');
+        homeScreen.classList.remove('hidden');
+    });
+
+    difficultyRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            playSound('difficultySelect');
+        });
+    });
+
+    helpButton.addEventListener('click', () => {
+        playSound('helpOpen');
+        helpModal.classList.remove('hidden');
+    });
+
+    closeHelpButton.addEventListener('click', () => {
+        playSound('helpClose');
+        helpModal.classList.add('hidden');
+    });
+
+    
+
+    helpItemTitles.forEach(title => {
+        title.addEventListener('click', () => {
+            playSound('difficultySelect');
+            title.classList.toggle('active');
+            const content = title.nextElementSibling;
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        });
+    });
+
+    // --- 初期化処理 ---
+    loadGameData();
+});
