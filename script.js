@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- トロフィー定義 ---
     const trophyMasterData = {
         'hard_ss': {
-            name: '広告に愛をこめて',
+            name: '広告に<br>愛をこめて',
             description: '難易度「むずかしい」でSSランクを取る。',
             icon: '💖'
         },
@@ -75,12 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: '💥'
         },
         'no_score_clear': {
-            name: '戦わずして完全王者',
-            description: '広告を消さずにクリア。（＝スコア0でクリア）',
+            name: '戦わずして<br>完全王者',
+            description: '広告を消さずにクリア。',
             icon: '👑'
         },
         'risky_a': {
-            name: 'ぼろぼろのパソコンでつかむ勝利',
+            name: 'ぼろぼろの<br>パソコンでつかむ勝利',
             description: '偽ダウンロードボタンを3つクリックしながら、ランクA以上を取る。',
             icon: '💻'
         },
@@ -164,7 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
         virus: 'sounds/virus.mp3',
         helpOpen: 'sounds/help_button.mp3',
         helpClose: 'sounds/help_close_button.mp3',
-        trophyUnlock: 'sounds/ss_success.mp3' // トロフィー獲得音
+        trophyUnlock: 'sounds/torfy_get.mp3', // トロフィー獲得音
+        trophyOpen: 'sounds/torfy_button.mp3',
+        trophyClose: 'sounds/torfy_close_button.mp3'
     };
 
     // --- 関数定義 ---
@@ -654,16 +656,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // トロフィーモーダル
     trophyButton.addEventListener('click', () => {
-        playSound('helpOpen'); // 同じ音で良いか
+        playSound('trophyOpen'); // 同じ音で良いか
         displayTrophies(); // 開くたびに最新の状態を表示
         trophyModal.classList.remove('hidden');
     });
     closeTrophyButton.addEventListener('click', () => {
-        playSound('helpClose');
+        playSound('trophyClose');
         trophyModal.classList.add('hidden');
     });
     trophyOverlay.addEventListener('click', () => {
-        playSound('helpClose');
+        playSound('trophyClose');
         trophyModal.classList.add('hidden');
     });
 
@@ -672,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGameData();
 });
 
-// ウィンドウリサイズ時に広告の位置を再調整
+// ウィンドウリサイズ時に広告の位置を再調整 (いつやったのか分からない)
 window.addEventListener('resize', () => {
     const ads = document.querySelectorAll('.ad');
     const container = document.getElementById('ad-container');
