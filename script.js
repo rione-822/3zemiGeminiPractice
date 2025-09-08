@@ -527,7 +527,11 @@ document.addEventListener('DOMContentLoaded', () => {
         helpModal.classList.add('hidden');
     });
 
-    
+    helpOverlay.addEventListener('click', () => {
+        playSound('helpClose');
+        helpModal.classList.add('hidden');
+    });
+
 
     helpItemTitles.forEach(title => {
         title.addEventListener('click', () => {
