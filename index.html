@@ -8,13 +8,35 @@
 </head>
 <body>
     <div id="home-screen">
-        <h1>広告ブレイク！</h1>
-        <p>ウェブ広告の煩わしさから解放されよう！<br>ひたすら広告を消して、最高のスコアを目指せ！</p>
-        <button id="start-button">広告消しを始める</button>
-        <div id="difficulty-selector">
-            <label><input type="radio" name="difficulty" value="easy" checked> かんたん</label>
-            <label><input type="radio" name="difficulty" value="normal"> ふつう</label>
-            <label><input type="radio" name="difficulty" value="hard"> むずかしい</label>
+        <button id="help-button">？</button>
+        <button id="trophy-button">🏆</button>
+        <div class="home-content">
+            <h1>広告ブレイク！</h1>
+            <p>ウェブ広告の煩わしさから解放されよう！<br>ひたすら広告を消して、最高のスコアを目指せ！</p>
+            <button id="start-button">広告消しを始める</button>
+            <div id="difficulty-selector">
+                <label><input type="radio" name="difficulty" value="easy" checked> かんたん</label>
+                <label><input type="radio" name="difficulty" value="normal"> ふつう</label>
+                <label><input type="radio" name="difficulty" value="hard"> むずかしい</label>
+            </div>
+
+            <div id="best-scores-container">
+                <div class="best-score-box" id="best-score-easy">
+                    <p>かんたん</p>
+                    <p>最高ランク: <span id="easy-best-rank">-</span></p>
+                    <p>最高スコア: <span id="easy-best-score">記録なし</span></p>
+                </div>
+                <div class="best-score-box" id="best-score-normal">
+                    <p>ふつう</p>
+                    <p>最高ランク: <span id="normal-best-rank">-</span></p>
+                    <p>最高スコア: <span id="normal-best-score">記録なし</span></p>
+                </div>
+                <div class="best-score-box" id="best-score-hard">
+                    <p>むずかしい</p>
+                    <p>最高ランク: <span id="hard-best-rank">-</span></p>
+                    <p>最高スコア: <span id="hard-best-score">記録なし</span></p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -44,6 +66,89 @@
             <p id="result-message"></p>
             <button id="retry-button">もう一度遊ぶ</button>
             <button id="back-to-home-button">ホーム画面へ戻る</button>
+        </div>
+    </div>
+
+    <div id="help-modal" class="hidden">
+        <div id="help-overlay"></div>
+        <div id="help-content">
+            <button id="close-help-button">&times;</button>
+            <h2>ヘルプ</h2>
+            <div class="help-item">
+                <div class="help-item-title" id="story"><a href="#story">ストーリー</a></div>
+                <div class="help-item-content">
+                    <p>あなたはとある無料ソフトをダウンロードすべく、指定されたダウンロードページへと向かった。<br>しかし、そこは無法地帯の<b>広告ジャングル</b>だった・・・！<br>広告を消しつつ、無料ソフトをダウンロードしよう！<br><br>堪忍袋の緒が切れる前に。</p>
+                </div>
+            </div>
+            <div class="help-item">
+                <div class="help-item-title" id="how-to-play"><a href="#how-to-play">遊び方</a></div>
+                <div class="help-item-content">
+                    <p>
+                        ・画面内にちらばる偽のダウンロードボタンの中から、<strong style="color: #007bff;">本物のダウンロードボタン</strong>を見つけ出してクリックするとゲームクリアです。<br>
+                        ・広告の「&times;」を押すと広告が消え、スコアが加算されます。<br>
+                        ・広告本体や、偽のダウンロードボタンをクリックしてしまうと、制限時間が減るペナルティがあります。
+                    </p>
+                </div>
+            </div>
+            <div class="help-item">
+                <div class="help-item-title" id="what-difficulty"><a href="#what-difficulty"> 難易度について</a></div>
+                <div class="help-item-content">
+                    <p>難易度によって、制限時間、広告の数、偽ボタンの数などが変化します。</p>
+                    <ul>
+                        <li><b>かんたん:</b> まずはゲームに慣れたい人向け。</li>
+                        <li><b>ふつう:</b> 少し手強くなった広告消しを楽しみたい人向け。</li>
+                        <li><b>むずかしい:</b> 広告のプロを目指す人向け。特殊な広告も出現します。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="help-item">
+                <div class="help-item-title" id="what-add"> <a href="#what-add">広告の種類</a></div>
+                <div class="help-item-content">
+                    <ul style="text-align: left;">
+                        <li><b>通常広告:</b> 「&times;」ボタンで消える普通の広告。</li>
+                        <li><b>フェードイン広告:</b> ふわっと現れる広告。</li>
+                        <li><b>ポップアップ広告:</b> 偽ボタンを押すと現れるペナルティ広告。</li>
+                        <li><b>二重バツ広告:</b> 片方がダミーの「&times;」ボタンを持つ厄介な広告。「むずかしい」モードで出現。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="help-item">
+                <div class="help-item-title" id="what-ranks"><a href="#what-ranks"> ランクについて</a></div>
+                <div class="help-item-content">
+                    <p>ゲームクリア時のスコアに応じてランクが決まります。高難易度ほど高いスコアを狙えます。(SSランクは「むずかしい」モード限定です)</p>
+                    <table id="rank-table">
+                        <thead>
+                            <tr>
+                                <th>ランク</th>
+                                <th>かんたん</th>
+                                <th>ふつう</th>
+                                <th>むずかしい</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>SS</td><td>-</td><td>-</td><td>4600~</td></tr>
+                            <tr><td>S</td><td>1500~</td><td>3000~</td><td>4300~</td></tr>
+                            <tr><td>A</td><td>1200~</td><td>2400~</td><td>3300~</td></tr>
+                            <tr><td>B</td><td>900~</td><td>1800~</td><td>2300~</td></tr>
+                            <tr><td>C</td><td>600~</td><td>1200~</td><td>1300~</td></tr>
+                            <tr><td>D</td><td>0~</td><td>0~</td><td>0~</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="trophy-notification-container"></div>
+
+    <div id="trophy-modal" class="hidden">
+        <div id="trophy-overlay"></div>
+        <div id="trophy-content">
+            <button id="close-trophy-button">&times;</button>
+            <h2>トロフィー</h2>
+            <div id="trophy-list">
+                <!-- トロフィーがここに動的に追加される -->
+            </div>
         </div>
     </div>
 
